@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interactive Pricing Calculator — Premium Dashboard</title>
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- jsPDF Library for real PDF downloads -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body class="light-mode">
+    <!-- Background Ambient Mesh Gradient Blobs -->
+    <div class="blob blob-1" id="blob-1"></div>
+    <div class="blob blob-2" id="blob-2"></div>
+    
+    <!-- Toast Notifications Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <div class="app-wrapper">
+      <!-- Sticky Navigation Header -->
+      <header class="main-header" id="main-header">
+        <div class="header-content">
+          <div class="brand">
+            <div class="logo-box">
+              <i data-lucide="calculator" class="logo-icon"></i>
+            </div>
+            <div>
+              <h1 class="app-title">Interactive Pricing Calculator</h1>
+              <p class="app-subtitle">SaaS Enterprise Financial Planner</p>
+            </div>
+          </div>
+          <div class="header-actions">
+            <!-- Theme Toggle Switch -->
+            <button class="theme-toggle" id="theme-toggle" aria-label="Toggle visual theme">
+              <i data-lucide="sun" class="sun-icon"></i>
+              <i data-lucide="moon" class="moon-icon"></i>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Grid Container -->
+      <main class="dashboard-grid">
+        
+        <!-- Left Column: Interactive Input Form -->
+        <section class="card form-card" id="input-section">
+          <div class="card-header">
+            <h2 class="card-title">
+              <i data-lucide="settings" class="section-icon"></i>
+              Pricing Parameters
+            </h2>
+            <p class="card-desc">Adjust the variables below to simulate calculations instantly.</p>
+          </div>
+          
+          <form id="calculator-form" class="calculator-form" onsubmit="event.preventDefault();">
+            
+            <!-- Currency & Base Price Grid -->
+            <div class="form-row-2">
+              <!-- Currency Selector -->
+              <div class="form-group" id="group-currency">
+                <label for="currency-select" class="form-label">
+                  Currency
+                </label>
+                <div class="select-wrapper">
+                  <select id="currency-select" class="form-select">
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="PKR">PKR (₨)</option>
+                  </select>
+                  <i data-lucide="chevron-down" class="select-arrow"></i>
+                </div>
+              </div>
+
+              <!-- Product Unit Price -->
+              <div class="form-group" id="group-price">
+                <label for="input-price" class="form-label">
+                  Unit Price
+                </label>
+                <div class="input-prefix-wrapper">
+                  <span class="input-prefix" id="price-prefix">$</span>
+                  <input 
+                    type="number" 
+                    id="input-price" 
+                    class="form-input" 
+                    placeholder="0.00" 
+                    min="0" 
+                    step="0.01" 
+                    required 
+                    autocomplete="off"
+                  />
+                </div>
+                <div class="error-msg" id="error-price"></div>
+              </div>
+            </div>
+
+            <!-- Quantity Slider & Input -->
+            <div class="form-group" id="group-quantity">
+              <div class="label-header">
+                <label for="input-quantity" class="form-label">Quantity</label>
+                <span class="badge quantity-badge" id="quantity-badge">1 Unit</span>
+              </div>
+              <div class="quantity-input-group">
+                <button type="button" class="qty-btn" id="qty-minus" aria-label="Decrease quantity">
+                  <i data-lucide="minus"></i>
+                </button>
+                <input 
+                  type="number" 
+                  id="input-quantity" 
+                  class="form-input text-center font-mono font-bold" 
+                  value="1" 
+                  min="1" 
+                  step="1" 
+                  required
+                />
+                <button type="button" class="qty-btn" id="qty-plus" aria-label="Increase quantity">
+                  <i data-lucide="plus"></i>
+                </button>
+              </div>
+              
+              <!-- Quick Select Buttons -->
+              <div class="quick-presets">
+                <button type="button" class="preset-btn active" data-value="1">1 Unit</button>
+                <button type="button" class="preset-btn" data-value="5">5 Units <span class="discount-pill">-10%</span></button>
+                <button type="button" class="preset-btn" data-value="10">10 Units <span class="discount-pill">-15%</span></button>
+                <button type="button" class="preset-btn" data-value="20">20+ Units <span class="discount-pill">-20%</span></button>
+              </div>
+              <div class="error-msg" id="error-quantity"></div>
+            </div>
+
+            <!-- Tax Input -->
+            <div class="form-group" id="group-tax">
+              <label for="input-tax" class="form-label">Tax Rate (%)</label>
+              <div class="input-suffix-wrapper">
+                <input 
+                  type="number" 
+                  id="input-tax" 
+                  class="form-input" 
+                  value="15" 
+                  min="0" 
+                  max="100" 
+                  step="0.1" 
+                  required
+                />
+                <span class="input-suffix">%</span>
+              </div>
+              <div class="error-msg" id="error-tax"></div>
+            </div>
+
+            <!-- Custom Discount Options -->
+            <div class="form-row-2">
+              <!-- Discount Type -->
+              <div class="form-group" id="group-discount-type">
+                <label for="discount-type" class="form-label">Custom Discount Type</label>
+                <div class="select-wrapper">
+                  <select id="discount-type" class="form-select">
+                    <option value="none">None</option>
+                    <option value="percentage">Percentage (%)</option>
+                    <option value="fixed">Fixed Amount</option>
+                  </select>
+                  <i data-lucide="chevron-down" class="select-arrow"></i>
+                </div>
+              </div>
+
+              <!-- Discount Value -->
+              <div class="form-group" id="group-discount-value">
+                <label for="input-discount-val" class="form-label">Discount Value</label>
+                <div class="input-suffix-wrapper">
+                  <input 
+                    type="number" 
+                    id="input-discount-val" 
+                    class="form-input" 
+                    placeholder="0" 
+                    min="0" 
+                    disabled
+                  />
+                  <span class="input-suffix" id="discount-suffix">%</span>
+                </div>
+                <div class="error-msg" id="error-discount-val"></div>
+              </div>
+            </div>
+
+            <!-- Promo Code Input -->
+            <div class="form-group" id="group-promo">
+              <label for="input-promo" class="form-label">Promo Code</label>
+              <div class="promo-input-wrapper">
+                <input 
+                  type="text" 
+                  id="input-promo" 
+                  class="form-input" 
+                  placeholder="e.g. SAVE10" 
+                  autocomplete="off"
+                />
+                <button type="button" class="promo-apply-btn" id="btn-promo-apply">Apply</button>
+              </div>
+              <div class="promo-feedback" id="promo-feedback"></div>
+              <div class="promo-hints">
+                <span>Try: <strong class="code-pill">SAVE10</strong> (10% Off) or <strong class="code-pill">WELCOME20</strong> (20% Off)</span>
+              </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-actions-row">
+              <button type="button" class="btn btn-secondary" id="btn-reset">
+                <i data-lucide="rotate-ccw"></i> Reset Fields
+              </button>
+              <button type="submit" class="btn btn-primary" id="btn-calculate">
+                <span class="btn-text">
+                  <i data-lucide="sparkles"></i> Calculate Price
+                </span>
+                <span class="btn-spinner hidden"></span>
+              </button>
+            </div>
+
+          </form>
+        </section>
+
+        <!-- Right Column: Interactive Results Dashboard -->
+        <section class="results-column">
+          
+          <!-- Large Prominent Total Card -->
+          <div class="card total-card" id="total-card">
+            <div class="total-header">
+              <div>
+                <span class="total-label">Grand Total</span>
+                <span class="badge live-indicator" id="live-indicator">
+                  <span class="pulse-dot"></span>
+                  Live Calculating
+                </span>
+              </div>
+              <button class="icon-btn-floating" id="btn-copy-total" title="Copy Grand Total">
+                <i data-lucide="copy" id="copy-icon"></i>
+              </button>
+            </div>
+            
+            <div class="grand-total-display">
+              <span class="currency-symbol" id="display-currency-symbol">$</span>
+              <span class="total-amount" id="display-grand-total">0.00</span>
+            </div>
+
+            <div class="savings-ticker-box hidden" id="savings-ticker-box">
+              <i data-lucide="piggy-bank" class="savings-icon"></i>
+              <span>You are saving <strong id="ticker-savings-amount">0.00</strong> on this deal!</span>
+            </div>
+          </div>
+
+          <!-- Dynamic Breakdown Breakdown Panel -->
+          <div class="card breakdown-card" id="breakdown-section">
+            <div class="card-header border-b">
+              <h3 class="card-title">
+                <i data-lucide="receipt" class="section-icon"></i>
+                Detailed Breakdown
+              </h3>
+            </div>
+            
+            <div class="breakdown-list">
+              <!-- Subtotal Line -->
+              <div class="breakdown-item">
+                <span class="item-label">Subtotal <span class="text-xs text-muted" id="breakdown-qty-label">(0 × 0.00)</span></span>
+                <span class="item-value font-mono" id="breakdown-subtotal">0.00</span>
+              </div>
+              
+              <!-- Volume Discount Line -->
+              <div class="breakdown-item discount-row hidden" id="row-volume-discount">
+                <span class="item-label flex-align-center">
+                  Volume Discount <span class="badge discount-badge" id="volume-discount-pct">0%</span>
+                </span>
+                <span class="item-value font-mono discount text-green-500" id="breakdown-volume-discount">-0.00</span>
+              </div>
+
+              <!-- Custom Discount Line -->
+              <div class="breakdown-item discount-row hidden" id="row-custom-discount">
+                <span class="item-label flex-align-center">
+                  Custom Discount <span class="badge discount-badge" id="custom-discount-pct">0%</span>
+                </span>
+                <span class="item-value font-mono discount text-green-500" id="breakdown-custom-discount">-0.00</span>
+              </div>
+
+              <!-- Promo Code Savings Line -->
+              <div class="breakdown-item discount-row hidden" id="row-promo-discount">
+                <span class="item-label flex-align-center">
+                  Promo Discount <span class="badge promo-badge" id="promo-discount-label">CODE</span>
+                </span>
+                <span class="item-value font-mono discount text-green-500" id="breakdown-promo-discount">-0.00</span>
+              </div>
+
+              <!-- Tax Amount Line -->
+              <div class="breakdown-item">
+                <span class="item-label" id="breakdown-tax-label">Tax (15%)</span>
+                <span class="item-value font-mono" id="breakdown-tax-amount">0.00</span>
+              </div>
+
+              <div class="divider"></div>
+
+              <!-- Net Savings Line -->
+              <div class="breakdown-item total-savings-row text-green-500 font-bold">
+                <span class="item-label flex-align-center">
+                  <i data-lucide="sparkles" class="w-4 h-4 mr-1 text-green-500"></i> Total Saved
+                </span>
+                <span class="item-value font-mono" id="breakdown-total-saved">0.00</span>
+              </div>
+            </div>
+
+            <!-- Interactive visual breakdown chart (SVG-based) -->
+            <div class="chart-container">
+              <span class="chart-title">Visual Allocation</span>
+              <div class="bar-chart">
+                <div class="bar-segment bar-net" id="bar-net" style="width: 70%;" title="Net Cost"></div>
+                <div class="bar-segment bar-tax" id="bar-tax" style="width: 15%;" title="Tax Amount"></div>
+                <div class="bar-segment bar-saved" id="bar-saved" style="width: 15%;" title="Amount Saved"></div>
+              </div>
+              <div class="chart-legend">
+                <div class="legend-item">
+                  <span class="legend-dot bg-blue"></span>
+                  <span>Net Cost (<strong id="legend-pct-net">70%</strong>)</span>
+                </div>
+                <div class="legend-item">
+                  <span class="legend-dot bg-red"></span>
+                  <span>Tax (<strong id="legend-pct-tax">15%</strong>)</span>
+                </div>
+                <div class="legend-item">
+                  <span class="legend-dot bg-green"></span>
+                  <span>Saved (<strong id="legend-pct-saved">15%</strong>)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Export Buttons -->
+            <div class="export-actions">
+              <button class="btn btn-outline" id="btn-print">
+                <i data-lucide="printer"></i> Print Receipt
+              </button>
+              <button class="btn btn-outline" id="btn-pdf">
+                <i data-lucide="file-down"></i> Download PDF
+              </button>
+            </div>
+          </div>
+
+        </section>
+      </main>
+
+      <!-- Footer -->
+      <footer class="app-footer">
+        <p>© 2026 Interactive Pricing Calculator. Built with pure performance & accessibility in mind.</p>
+      </footer>
+    </div>
+
+    <!-- Script File -->
+    <script type="module" src="/script.js"></script>
+  </body>
+</html>
