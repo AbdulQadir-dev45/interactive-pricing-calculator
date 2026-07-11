@@ -88,6 +88,16 @@ body.dark-mode {
   padding: 0;
 }
 
+html {
+    overflow-y: scroll;
+    scrollbar-gutter: stable;
+}
+
+body {
+    margin: 0;
+    overflow-x: hidden;
+}
+
 body {
   font-family: var(--font-sans);
   font-size: 16px;
