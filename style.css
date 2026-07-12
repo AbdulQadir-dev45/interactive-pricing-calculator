@@ -409,6 +409,11 @@ body {
   .form-row-2 {
     grid-template-columns: 1fr 1fr;
   }
+
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+  }
 }
 
 .form-group {
@@ -591,9 +596,37 @@ body {
   margin-top: 4px;
 }
 
-@media (min-width: 480px) {
+@media (max-width: 480px) {
   .quick-presets {
     grid-template-columns: repeat(4, 1fr);
+  }
+
+  .main-header {
+    left: 4%;
+    right: 4%;
+  }
+
+  .main-header p {
+    display: none;
+  }
+
+  .logo-box {
+    width: 60px;
+    height: 40px;
+  }
+
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .theme-toggle {
+    width: 55px;
+    height: 28px;
+  }
+
+  .dashboard-grid {
+    margin-top: 18px;
   }
 }
 
