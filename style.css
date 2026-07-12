@@ -1103,10 +1103,26 @@ body {
     display: none !important;
   }
 
+  .main-header {
+    top: 0 !important;
+    left: 1rem !important;
+  }
+
+  .logo-box {
+    height: 60px !important;
+    width: 60px !important;
+  }
+
+  .logo-icon {
+    color: #000000 !important;
+    height: 50px !important;
+    width: 50px !important;
+  }
+
   .app-wrapper {
     max-width: 100% !important;
     width: 100% !important;
-    padding: 0 !important;
+    padding-top: 100px !important;
     margin: 0 !important;
   }
 
