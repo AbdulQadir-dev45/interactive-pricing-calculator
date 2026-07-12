@@ -89,13 +89,8 @@ body.dark-mode {
 }
 
 html {
-    overflow-y: scroll;
-    scrollbar-gutter: stable;
-}
-
-body {
-    margin: 0;
-    overflow-x: hidden;
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -223,7 +218,7 @@ body {
 /* --- Base Layout Structure --- */
 .app-wrapper {
   max-width: 1280px;
-  margin: 0 auto;
+  margin: 90px auto;
   padding: 0 24px;
   display: flex;
   flex-direction: column;
@@ -232,13 +227,15 @@ body {
 
 /* --- Sticky Modern Navigation Header --- */
 .main-header {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 8%;
+  right: 8%;
   z-index: 100;
   background-color: rgba(255, 255, 255, 0.01);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--glass-border);
-  padding: 16px 0;
+  padding: 16px;
   margin-bottom: 32px;
   transition: border-color var(--transition-normal);
 }
@@ -400,7 +397,6 @@ body {
   padding: 0 24px 24px 24px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
 }
 
 .form-row-2 {
@@ -776,14 +772,14 @@ body {
 .results-column {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 18px;
 }
 
 /* --- Total display Card (Floating glow, futuristic look) --- */
 .total-card {
   background: var(--total-card-bg);
   color: var(--total-card-text);
-  padding: 28px;
+  padding: 26px;
   border: 1px solid rgba(255, 255, 255, 0.05);
   display: flex;
   flex-direction: column;
