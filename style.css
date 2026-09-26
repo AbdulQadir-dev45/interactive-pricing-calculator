@@ -108,8 +108,8 @@ body {
 /* --- Animated Ambient Blobs --- */
 .blob {
   position: absolute;
-  width: 50vw;
-  height: 50vw;
+  /* width: 50vw;
+  height: 50vw; */
   max-width: 600px;
   max-height: 600px;
   border-radius: var(--radius-full);
@@ -1108,8 +1108,7 @@ body {
 
 /* --- Footer layout --- */
 .app-footer {
-  margin-top: auto;
-  padding: 32px 0;
+  padding: 10px 0;
   text-align: center;
   border-top: 1px solid var(--divider-color);
 }
@@ -1147,7 +1146,6 @@ body {
   }
 
   .logo-icon {
-    color: #000000 !important;
     height: 50px !important;
     width: 50px !important;
   }
